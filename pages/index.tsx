@@ -1,23 +1,17 @@
-// import Head from 'next/head'
-
 import Posts from "../components/Posts";
-import { PostProps } from "../components/Posts";
+import { initializeStore } from "../store/store";
 
-export default function Home({ posts = [] }: PostProps): JSX.Element {
-  return (
-    <div className="bg-smoke grid grid-cols-1 min-h-screen">
-      <Posts posts={posts} />
-    </div>
-  );
+export default function Home({ initializeReduxState: { posts = [] } = {} }): JSX.Element {
+  return <Posts posts={posts} />
 }
 
-export async function getStaticProps() {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-  const posts = await res.json();
+export async function getServerSideProps() {
+  const postRes = await fetch('https://jsonplaceholder.typicode.com/posts');
+  const apiPosts = await postRes.json();
 
-  return {
-    props: {
-      posts
-    }
-  }
+  const reduxStore = initializeStore({ posts: apiPosts });
+
+  reduxStore.dispatch({ type: 'updatePosts', payload: apiPosts });
+
+  return { props: { initializeReduxState: reduxStore.getState() } };
 }

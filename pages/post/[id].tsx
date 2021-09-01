@@ -1,6 +1,9 @@
 import { PostType } from "../../components/Posts";
+import PrimaryHeading from '../../components/headings/PrimaryHeading';
+import TextBlock from "../../components/TextBlock";
+import Comments from "../../components/Comments";
 
-type CommentType = {
+export type CommentType = {
   name: string
   body: string
   email: string
@@ -15,11 +18,12 @@ type Props = {
 
 export default function PostPage ({ post, comments }: Props): JSX.Element {
   return (
-    <div className="bg-smoke grid grid-cols-1 min-h-screen">
-      <h1>{post.title}</h1>
+    <div className="m-auto w-1/2">
+      <PrimaryHeading>{post.title}</PrimaryHeading>
+      <TextBlock>{post.body}</TextBlock>
 
-      <p>comments</p>
-      {comments && comments.map(comment => <p key={comment.id}>{comment.body}</p>)}
+      <p className="mb-4 mt-4">comments</p>
+      <Comments comments={comments} />
     </div>
   )
 }
